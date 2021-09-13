@@ -10,9 +10,9 @@ import (
 )
 
 func sha256Of(input string) []byte {
-	algorithm := sha256.New()
-	algorithm.Write([]byte(input))
-	return algorithm.Sum(nil)
+	sha256Obj := sha256.New()
+	sha256Obj.Write([]byte(input))
+	return sha256Obj.Sum(nil)
 }
 
 func base58Encoded(bytes []byte) string {
@@ -25,9 +25,9 @@ func base58Encoded(bytes []byte) string {
 	return string(result)
 }
 
-func generateShortLink(initialLink, userID string) string {
+func GenerateShortLink(initialLink, userID string) string {
 	urlHashBytes := sha256Of(initialLink + userID)
 	generatedNumber := new(big.Int).SetBytes(urlHashBytes).Uint64()
 	finalString := base58Encoded([]byte(fmt.Sprintf("%d", generatedNumber)))
-	return finalString[:8]
+	return finalString[:10]
 }

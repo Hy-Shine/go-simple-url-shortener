@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -17,13 +18,12 @@ var (
 	ctx          = context.Background()
 )
 
-const (
-	cacheDurtion = 6 * time.Hour
-)
+const cacheDurtion = 6 * time.Hour
 
 func InitializeStore() *StorageService {
+	redisIP := os.Getenv("REDIS_HOST")
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     redisIP + ":6379",
 		Password: "",
 		DB:       0,
 	})
@@ -57,7 +57,7 @@ think about redirect.
 func RetrieveInitiaURL(shortURL string) string {
 	result, err := storeService.redisClient.Get(ctx, shortURL).Result()
 	if err != nil {
-		panic(fmt.Sprintf("Failed RetrieveInitialUrl url | Error: %v - shortUrl: %s\n", err, shortURL))
+		panic(fmt.Sprintf("Failed RetrieveInitialURL url | Error: %v - shortUrl: %s\n", err, shortURL))
 	}
 	return result
 }
