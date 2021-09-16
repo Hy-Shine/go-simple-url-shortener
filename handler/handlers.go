@@ -10,7 +10,7 @@ import (
 
 type URLCreateRequest struct {
 	LongURL string `json:"long_url" binding:"required"`
-	UserID  string `json:"user_id" binding:"required"`
+	// UserID  string `json:"user_id" binding:"required"`
 }
 
 func CreateShortURL(c *gin.Context) {
@@ -21,8 +21,8 @@ func CreateShortURL(c *gin.Context) {
 		})
 		return
 	}
-	shortURL := shortener.GenerateShortLink(creationRequest.LongURL, creationRequest.UserID)
-	store.SaveURLMapping(shortURL, creationRequest.LongURL, creationRequest.UserID)
+	shortURL := shortener.GenerateShortLink(creationRequest.LongURL) // creationRequest.UserID)
+	store.SaveURLMapping(shortURL, creationRequest.LongURL)          //creationRequest.UserID)
 	host := "localhost:9100/"
 	c.JSON(200, gin.H{
 		"message":   "short url created successfully",

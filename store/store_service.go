@@ -41,7 +41,7 @@ func InitializeStore() *StorageService {
 We want to be able to save the mapping between the originalUrl
 and the generated shortUrl url
 */
-func SaveURLMapping(shortURL, originalURL string, userID string) {
+func SaveURLMapping(shortURL, originalURL string) {
 	err := storeService.redisClient.Set(ctx, shortURL, originalURL, cacheDurtion).Err()
 	if err != nil {
 		panic(fmt.Sprintf("Failed saving key url | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortURL, originalURL))
