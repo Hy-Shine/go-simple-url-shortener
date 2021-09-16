@@ -22,6 +22,9 @@ const cacheDurtion = 6 * time.Hour
 
 func InitializeStore() *StorageService {
 	redisIP := os.Getenv("REDIS_HOST")
+	if redisIP == "" {
+		redisIP = "localhost"
+	}
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     redisIP + ":6379",
 		Password: "",
