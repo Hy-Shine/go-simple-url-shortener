@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/hy-shine/go-url-shortener/shortener"
 	"github.com/hy-shine/go-url-shortener/store"
@@ -16,8 +17,11 @@ const helpInfo string = `Usage: ./client [OPTION] [URL]
 	-g		generate a shorter url by the client
 	-v --version	show the client version info`
 
-func help(args []string) string {
-	arg := args[0]
+func client(args []string) string {
+	if len(args) == 1 {
+		return helpInfo
+	}
+	arg := args[1]
 	if arg[0:1] != "-" {
 		return fmt.Sprintf("unrecognized option '%s'\ntry './client -h' for more infomation.", arg)
 	} else if arg[0:2] == "--" {
@@ -39,22 +43,22 @@ func help(args []string) string {
 	case "-v", "--version":
 		return "The client version: 1.0"
 	case "-g":
-		if len(args) == 1 {
+		if len(args) == 2 {
 			return "Missing a long url"
 		}
-		shortURL := shortener.GenerateShortLink(args[1])
-		store.SaveURLMapping(shortURL, args[1])
+		shortURL := shortener.GenerateShortLink(args[2])
+		store.SaveURLMapping(shortURL, args[2])
 		return "http://localhost/" + shortURL
 	}
-	return "Unkown error"
+	argsString := "["
+	for _, v := range args {
+		argsString += strconv.Quote(v) + ","
+	}
+	panic(fmt.Sprintf("Unkown error, the args %s\n", argsString[0:len(argsString)-1]+"]"))
 }
 
 func main() {
 	args := os.Args
-	if len(args) == 1 {
-		fmt.Println(helpInfo)
-		return
-	}
-	info := help(args[1:])
+	info := client(args)
 	fmt.Println(info)
 }
