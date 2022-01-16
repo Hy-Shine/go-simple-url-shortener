@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/hy-shine/go-url-shortener/initiailze"
+
 	"github.com/go-redis/redis/v8"
 )
 
@@ -32,7 +34,7 @@ func InitializeStore() *StorageService {
 	})
 	pong, err := redisClient.Ping(ctx).Result()
 	if err != nil {
-		panic(fmt.Sprintf("Error init Redis: %v", err))
+		panic(fmt.Sprintf("Error initiailze Redis: %v", err))
 	}
 
 	fmt.Printf("\nRedis started successfully: pong message = {%s}", pong)
@@ -40,15 +42,13 @@ func InitializeStore() *StorageService {
 	return storeService
 }
 
-/*
-We want to be able to save the mapping between the originalUrl
-and the generated shortUrl url
-*/
-func SaveURLMapping(shortURL, originalURL string) {
-	err := storeService.redisClient.Set(ctx, shortURL, originalURL, cacheDurtion).Err()
+func SaveURLWithRedis(shortURL, originalURL string) error {
+	expire := time.Duration(initiailze.RedisConfig{}.Expire) * time.Second
+	err := storeService.redisClient.Set(ctx, shortURL, originalURL, expire).Err()
 	if err != nil {
-		panic(fmt.Sprintf("Failed saving key url | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortURL, originalURL))
+		return fmt.Errorf("Failed saving key url | Error: %v - shortUrl: %s - originalUrl: %s\n", err, shortURL, originalURL)
 	}
+	return nil
 }
 
 /*

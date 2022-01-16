@@ -1,0 +1,5 @@
+reids:
+  addr: ip:6379
+  db: 0
+  password: ''
+  expire: 684000

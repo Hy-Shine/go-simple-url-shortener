@@ -47,7 +47,7 @@ func client(args []string) string {
 			return "Missing a long url"
 		}
 		shortURL := shortener.GenerateShortLink(args[2])
-		store.SaveURLMapping(shortURL, args[2])
+		_ = store.SaveURLWithRedis(shortURL, args[2])
 		return "http://localhost/" + shortURL
 	}
 	argsString := "["

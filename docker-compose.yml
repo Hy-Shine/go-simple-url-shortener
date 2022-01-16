@@ -2,12 +2,10 @@ version: "2.0"
 services:
   web:
     build: .
-    container_name: go-url-shortener-server
+    container_name: shortener-server
     ports: 
-      - 9200:9100
+      - "9100:9100"
     restart: always
-    environment: 
-      - REDIS_HOST=redis
   redis:
-    image: redis:alpine
-    container_name: URL_Redis
+    image: redis:latest
+    container_name: redis

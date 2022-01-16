@@ -3,10 +3,17 @@ package main
 import (
 	"fmt"
 
+	"github.com/hy-shine/go-url-shortener/initiailze"
+
 	"github.com/gin-gonic/gin"
 	"github.com/hy-shine/go-url-shortener/handler"
 	"github.com/hy-shine/go-url-shortener/store"
 )
+
+func init() {
+	initiailze.Viper()
+	initiailze.Redis()
+}
 
 func main() {
 	router := gin.Default()
@@ -26,8 +33,7 @@ func main() {
 
 	store.InitializeStore()
 
-	err := router.Run(":9100")
-	if err != nil {
+	if err := router.Run(":9100"); err != nil {
 		panic(fmt.Sprintf("Failed to start the web server - Error: %v", err))
 	}
 }
